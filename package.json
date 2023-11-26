@@ -1,0 +1,28 @@
+{
+  "name": "catcher",
+  "version": "0.0.0",
+  "description": "A library to help you escape try-catch hell.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsup src/index.ts --outDir dist --d",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish": "npm run build && npm publish"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sbsto/catcher.git"
+  },
+  "author": "sbsto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sbsto/catcher/issues"
+  },
+  "homepage": "https://github.com/sbsto/catcher#readme",
+  "devDependencies": {
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  }
+}
