@@ -1,6 +1,6 @@
 {
   "name": "@sbsto/catcher",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A library to help you escape try-catch hell.",
   "main": "dist/index.js",
   "scripts": {

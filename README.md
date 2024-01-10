@@ -20,12 +20,12 @@ function fallibleAsyncOperation(data: string) {
 }
 
 async function getTwoResultsExample() {
-  const result1 = catcher(faillibleOperation, new Error("failed"));
+  const result1 = catcher(faillibleOperation);
   if (!result1.ok) {
     return result1.error; // handle first error here
   }
 
-  const result2 = await catcher(() => fallibleAsyncOperation(result1.data), new Error("failed"));
+  const result2 = await catcher(() => fallibleAsyncOperation(result1.data));
   if (!result2.ok) {
     return result2.error; // handle second error here
   }
