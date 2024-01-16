@@ -1,4 +1,6 @@
-import { Result } from "./types";
+type Result<T, E extends Error> =
+  | { ok: true; data: T }
+  | { ok: false; error: E };
 
 // Overloads
 export function catcher<T>(op: () => Promise<T>): Promise<Result<T, Error>>;
