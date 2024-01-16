@@ -73,43 +73,42 @@ In typescript, it can be difficult to manage handling different types of error. 
 
 ```ts
 enum SignInError {
-    IncorrectPassword = "IncorrectPassword",
-    UserNotFound = "UserNotFound"
+  IncorrectPassword = "IncorrectPassword",
+  UserNotFound = "UserNotFound",
 }
 
 const signInSafe = safe<SignInError>();
 
-async function signIn(email: string, password: string) => {
-    const user = await db.select(user).where({ email: "someone@something.com" });
-    if (!user) {
-        return signInSafe.fail(SignInError.UserNotFound);
-    }
+async function signIn(email: string, password: string) {
+  const user = await db.select(user).where({ email: "someone@something.com" });
+  if (!user) {
+    return signInSafe.fail(SignInError.UserNotFound);
+  }
 
-    if (user.passwordHash !== hashPassword(password)) {
-        return signInSafe.fail(SignInError.IncorrectPassword);
-    }
+  if (user.passwordHash !== hashPassword(password)) {
+    return signInSafe.fail(SignInError.IncorrectPassword);
+  }
 
-    return userSafe.ok(input);
-};
+  return userSafe.ok(input);
+}
 
 // Then, we can handle these accordingly & type-safely, e.g. in a route handler
 export const handler = (req: Request) => {
-    const signInResult = await signIn(req.body.email, req.body.password);
-    
-    // First, we check if it's OK
-    if (signInResult.ok) {
-        return redirect('/dashboard');
-    }
+  const signInResult = await signIn(req.body.email, req.body.password);
 
+  // First, we check if it's OK
+  if (signInResult.ok) {
+    return redirect("/dashboard");
+  }
 
-    // Then, we know it's one of two errors
-    if (signInResult.error === SignInError.UserNotFound) {
-        return redirect('signup');
-    }
+  // Then, we know it's one of two errors
+  if (signInResult.error === SignInError.UserNotFound) {
+    return redirect("signup");
+  }
 
-    // Here, we know they entered the wrong password
-    return response(403);
-}
+  // Here, we know they entered the wrong password
+  return response(403);
+};
 ```
 
 The above is probably bad security. But you get the idea. This might seem trivial here (it probably wouldn't be so bad to just do with with functions, e.g. trying to find the user, doing something if that fails, then verifying the password, doing something if that fails, otherwise continuing. But I like to encapsulate all of that in the parent function, without giving up a type-safe way to handle each error variant. This also becomes useful when you r errors can propogate through many functions (e.g. a parent's safe can account for the error types from multiple children's safes). 
