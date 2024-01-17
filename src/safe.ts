@@ -1,8 +1,8 @@
-type Result<T, E extends string> =
+export type Result<T, E extends string> =
   | { ok: true; data: T }
   | { ok: false; error: E };
 
-interface Safe<E extends string> {
+export interface Safe<E extends string> {
   ok<T>(data: T): Result<T, never>;
   ok(): Result<undefined, never>;
   fail(error: E): Result<never, E>;
