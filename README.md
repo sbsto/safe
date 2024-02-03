@@ -1,15 +1,63 @@
-# catcher
+# safe 
 
 A library to help save people from try-catch hell. 
 
-## Example
+## Example 1: `safe`
+
+In typescript, it can be difficult to manage handling different types of error. For example, you might want to handle an `IncorrectPassword` error differently to a `UserNotFound` error. 
+
+```ts
+import { safe } from "@sbsto/safe";
+
+enum SignInError {
+  IncorrectPassword = "IncorrectPassword",
+  UserNotFound = "UserNotFound",
+}
+
+const signInSafe = safe<SignInError>();
+
+async function signIn(email: string, password: string) {
+  const user = await db.select(user).where({ email: "someone@something.com" });
+  if (!user) {
+    return signInSafe.fail(SignInError.UserNotFound);
+  }
+
+  if (user.passwordHash !== hashPassword(password)) {
+    return signInSafe.fail(SignInError.IncorrectPassword);
+  }
+
+  return signInSafe.ok(input);
+}
+
+// Then, we can handle these accordingly & type-safely, e.g. in a route handler
+export const handler = (req: Request) => {
+  const signInResult = await signIn(req.body.email, req.body.password);
+
+  // First, we check if it's OK
+  if (signInResult.ok) {
+    return redirect("/dashboard");
+  }
+
+  // Then, we know it's one of two errors
+  if (signInResult.error === SignInError.UserNotFound) {
+    return redirect("signup");
+  }
+
+  // Here, we know they entered the wrong password
+  return response(403);
+};
+```
+
+The above is probably bad security. But you get the idea. This might seem trivial here (it probably wouldn't be so bad to just do with with functions, e.g. trying to find the user, doing something if that fails, then verifying the password, doing something if that fails, otherwise continuing. But I like to encapsulate all of that in the parent function, without giving up a type-safe way to handle each error variant. This also becomes useful when your errors can propagate through many functions (e.g. a parent's safe can account for the error types from multiple children's safes). 
+
+## Example 2: `catcher`
 
 Imagine you have a function with a return that depends on two fallible operations.
 
 Here's how you'd use `catcher` to manage this.
 
 ```ts
-import { catcher } from "catcher";
+import { catcher } from "@sbsto/safe";
 
 function fallibleOperation() {
   return "hello world";
@@ -66,49 +114,3 @@ async function getTwoResultsWithoutCatcherTwo() {
 The `catcher` has a couple benefits:
 * It has better type inferrence for the parent function
 * It allows you to specifically handle as many fallible operations as you need without deeply nested try-catch.  
-
-## Safes
-
-In typescript, it can be difficult to manage handling different types of error. For example, you might want to handle an `IncorrectPassword` error differently to a `UserNotFound` error. 
-
-```ts
-enum SignInError {
-  IncorrectPassword = "IncorrectPassword",
-  UserNotFound = "UserNotFound",
-}
-
-const signInSafe = safe<SignInError>();
-
-async function signIn(email: string, password: string) {
-  const user = await db.select(user).where({ email: "someone@something.com" });
-  if (!user) {
-    return signInSafe.fail(SignInError.UserNotFound);
-  }
-
-  if (user.passwordHash !== hashPassword(password)) {
-    return signInSafe.fail(SignInError.IncorrectPassword);
-  }
-
-  return signInSafe.ok(input);
-}
-
-// Then, we can handle these accordingly & type-safely, e.g. in a route handler
-export const handler = (req: Request) => {
-  const signInResult = await signIn(req.body.email, req.body.password);
-
-  // First, we check if it's OK
-  if (signInResult.ok) {
-    return redirect("/dashboard");
-  }
-
-  // Then, we know it's one of two errors
-  if (signInResult.error === SignInError.UserNotFound) {
-    return redirect("signup");
-  }
-
-  // Here, we know they entered the wrong password
-  return response(403);
-};
-```
-
-The above is probably bad security. But you get the idea. This might seem trivial here (it probably wouldn't be so bad to just do with with functions, e.g. trying to find the user, doing something if that fails, then verifying the password, doing something if that fails, otherwise continuing. But I like to encapsulate all of that in the parent function, without giving up a type-safe way to handle each error variant. This also becomes useful when your errors can propagate through many functions (e.g. a parent's safe can account for the error types from multiple children's safes). 

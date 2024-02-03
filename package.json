@@ -1,5 +1,5 @@
 {
-  "name": "@sbsto/catcher",
+  "name": "@sbsto/safe",
   "version": "0.0.0",
   "description": "A library to help you escape try-catch hell.",
   "main": "dist/index.js",
@@ -12,14 +12,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sbsto/catcher.git"
+    "url": "git+https://github.com/sbsto/safe.git"
   },
   "author": "sbsto",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sbsto/catcher/issues"
+    "url": "https://github.com/sbsto/safe/issues"
   },
-  "homepage": "https://github.com/sbsto/catcher#readme",
+  "homepage": "https://github.com/sbsto/safe#readme",
   "devDependencies": {
     "tsup": "^8.0.1",
     "typescript": "^5.3.2"
