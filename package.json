@@ -1,11 +1,11 @@
 {
   "name": "@sbsto/catcher",
-  "version": "1.1.1",
+  "version": "0.0.0",
   "description": "A library to help you escape try-catch hell.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsup src/index.ts --outDir dist --d",
-    "publish": "npm run build && npm publish --access public"
+    "publish": "npm publish --access public"
   },
   "files": [
     "dist"

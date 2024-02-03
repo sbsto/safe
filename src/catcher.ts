@@ -1,11 +1,9 @@
-type Result<T, E extends Error> =
-  | { ok: true; data: T }
-  | { ok: false; error: E };
+import { Result } from "./safe";
 
 // Overloads
-export function catcher<T>(op: () => Promise<T>): Promise<Result<T, Error>>;
+export function catcher<T>(op: () => Promise<T>): Promise<Result<T, string>>;
 
-export function catcher<T>(op: () => T): Result<T, Error>;
+export function catcher<T>(op: () => T): Result<T, string>;
 
 /**
  * Executes a function and handles the result or potential error. Depending on the options provided,
@@ -23,10 +21,10 @@ export function catcher<T>(op: () => T | Promise<T>) {
     return ok(result);
   } catch (e) {
     if (e instanceof Error) {
-      return fail(e);
+      return fail(e.message);
     }
 
-    return fail(new Error(`Unknown error: ${JSON.stringify(e)}`));
+    return fail(JSON.stringify(e));
   }
 }
 
@@ -34,6 +32,6 @@ function ok<T>(data: T): Result<T, never> {
   return { ok: true, data };
 }
 
-function fail(error: Error): Result<never, Error> {
-  return { ok: false, error };
+function fail(message: string): Result<never, string> {
+  return { ok: false, error: message };
 }
