@@ -63,7 +63,7 @@ async function getTwoResultsWithoutCatcherTwo() {
 } // inferred return type is Promise<unknown>
 ```
 
-The `catcher` has couple benefits:
+The `catcher` has a couple benefits:
 * It has better type inferrence for the parent function
 * It allows you to specifically handle as many fallible operations as you need without deeply nested try-catch.  
 
@@ -89,7 +89,7 @@ async function signIn(email: string, password: string) {
     return signInSafe.fail(SignInError.IncorrectPassword);
   }
 
-  return userSafe.ok(input);
+  return signInSafe.ok(input);
 }
 
 // Then, we can handle these accordingly & type-safely, e.g. in a route handler
@@ -111,4 +111,4 @@ export const handler = (req: Request) => {
 };
 ```
 
-The above is probably bad security. But you get the idea. This might seem trivial here (it probably wouldn't be so bad to just do with with functions, e.g. trying to find the user, doing something if that fails, then verifying the password, doing something if that fails, otherwise continuing. But I like to encapsulate all of that in the parent function, without giving up a type-safe way to handle each error variant. This also becomes useful when you r errors can propogate through many functions (e.g. a parent's safe can account for the error types from multiple children's safes). 
+The above is probably bad security. But you get the idea. This might seem trivial here (it probably wouldn't be so bad to just do with with functions, e.g. trying to find the user, doing something if that fails, then verifying the password, doing something if that fails, otherwise continuing. But I like to encapsulate all of that in the parent function, without giving up a type-safe way to handle each error variant. This also becomes useful when your errors can propagate through many functions (e.g. a parent's safe can account for the error types from multiple children's safes). 
