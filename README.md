@@ -14,7 +14,13 @@ enum SignInError {
   UserNotFound = "UserNotFound",
 }
 
-const signInSafe = safe<SignInError>();
+import { customLogger }  from './logger';
+
+/**
+  * Setting `DEBUG=1` in your .env will cause `safe` to log on errors.
+  * It defaults to `console` as the logger, but you may pass a custom one if you prefer.
+  */
+const signInSafe = safe<SignInError>({ logger: customLogger }); 
 
 async function signIn(email: string, password: string) {
   const user = await db.select(user).where({ email: "someone@something.com" });
