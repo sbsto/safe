@@ -3,7 +3,7 @@ import { configDotenv } from "dotenv";
 export interface Logger {
   error(...args: string[]): void;
   info(...args: string[]): void;
-  debug(...args: string[]): void;
+  log(...args: string[]): void;
 }
 
 export type Result<T, E extends string> =

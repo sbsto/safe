@@ -1,6 +1,6 @@
 {
   "name": "@sbsto/safe",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library to help you escape try-catch hell.",
   "main": "dist/index.js",
   "scripts": {
